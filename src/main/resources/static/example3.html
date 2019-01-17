@@ -1,0 +1,154 @@
+<html>
+    <head>
+        <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="../bower_components/angular/angular.min.js"></script>
+        <script src="../bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+        <script src="../bower_components/tv4/tv4.js"></script>
+        <script src="../bower_components/objectpath/lib/ObjectPath.js"></script>
+        <script src="../bower_components/angular-schema-form/dist/schema-form.min.js"></script>
+        <script src="../bower_components/angular-schema-form-bootstrap/bootstrap-decorator.min.js"></script>
+        <script src="../bower_components/angular-schema-form-datepicker/bootstrap-datepicker.min.js"></script>
+        <script src="../bower_components/pickadate/lib/picker.js"></script>
+        <script src="../bower_components/pickadate/lib/picker.date.js"></script>
+        <script src="../bower_components/pickadate/lib/picker.time.js"></script>
+        <script src="../bower_components/lodash/lodash.js"></script>
+
+
+        <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../bower_components/pickadate/lib/themes/default.css" />
+        <link rel="stylesheet" href="../bower_components/pickadate/lib/themes/default.date.css" />
+        <link rel="stylesheet" href="../bower_components/pickadate/lib/themes/default.time.css" />
+        <link rel="stylesheet" href="/font-awesome.min.css">
+        <link rel="stylesheet" href="/back.css">
+        <link rel="stylesheet" href="/stellarnav.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <script src="/stellarnav.js"></script>
+        <script>
+            function loadMenu() {
+                jQuery('#main-nav').stellarNav({
+                    theme: 'dark',
+
+                    breakpoint: 768,
+
+                    phoneBtn: false,
+
+                    locationBtn: false,
+
+                    sticky: true,
+
+                    openingSpeed: 250,
+
+                    closingDelay: 250,
+
+                    position: 'static',
+
+                    showArrows: true,
+
+                    closeBtn: false,
+                    scrollbarFix: false,
+                    mobileMode: false
+                });
+
+            }
+            ;
+        </script>
+        <script>
+
+            angular.module('demoApp', ["schemaForm"]).controller('DemoAppController', function ($scope, $http) {
+
+                $http.get('http://localhost:9091/schemaExample3').then(successCallback, errorCallback);
+                function successCallback(response) {
+
+                    $scope.schema = response.data;
+                    $http.get('http://localhost:9091/formExample3').then(successCallbackForm, errorCallbackForm);
+                    function successCallbackForm(responseForm) {
+                        $scope.form = responseForm.data;
+                        $http.get('http://localhost:9091/modelExample3').then(successCallbackModel, errorCallbackModel);
+                        function successCallbackModel(responseModel) {
+                            $scope.model = responseModel.data;
+
+                        }
+                        function errorCallbackModel(error) {
+                            //error code
+                        }
+
+                        $scope.debug = {schema: angular.copy($scope.schema), form: angular.copy($scope.form)};
+                    }
+                    function errorCallbackForm(error) {
+                        //error code
+                    }
+                    $scope.model = {};
+                    $scope.showModel = function ($event, item) {
+
+                        alert(JSON.stringify($scope.model));
+                    };
+                    /*$scope.setIds = function () {
+                     for (var i = 0, max = $scope.model.stavkeIzvoda.length; i < max; i++) {
+                     $scope.model.stavkeIzvoda[i].rbrStavke=i+1;
+                     }
+                     };*/
+                }
+                function errorCallback(error) {
+                    //error code
+                }
+            });
+        </script>
+        <title>Angular App</title>
+    </head>
+
+    <body ng-app="demoApp" onload="loadMenu()" style="background-image: url('../css/back.jpg') no-repeat center center fixed">
+        <div id="main-nav" class="stellarnav">
+
+            <ul>
+
+                <li><a target="_blank" href="http://www.alpacajs.org/" >Alpaca official page</a></li>
+
+                <li><a target="_blank" href="http://schemaform.io/">Angular official page</a></li>
+
+                <li><a target="_blank" href="https://github.com/mozilla-services/react-jsonschema-form">React official page</a></li>
+                <li><a href="#">Examples</a>
+
+                    <ul>
+                        <li><a href="http://localhost:8384/example1.html">Example1</a></li>
+                        <li><a href="http://localhost:8384/example2.html">Example2</a></li>
+                        <li><a href="http://localhost:8384/example3.html">Example3</a></li>
+                        <li><a href="http://localhost:8384/example4.html">Example4</a></li>
+                    </ul>
+
+                </li>
+            </ul>
+
+        </div>
+        <br>
+        <div class="container-fluid" ng-controller="DemoAppController">
+            <div class="col-sm-6 form">
+                <form sf-schema="schema" sf-form="form" sf-model="model"></form>
+            </div>
+
+            <div class="col-sm-6 debug">
+                <div class="wrapper">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Model</h4>
+                            <pre>{{model| json}}</pre>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Form</h4>
+                            <pre>{{debug.form| json}}</pre>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Schema</h4>
+                            <pre>{{debug.schema| json}}</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </body>
+
+</html>
